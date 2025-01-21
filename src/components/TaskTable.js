@@ -9,71 +9,39 @@ import {
     Paper,
     Typography,
 } from '@mui/material';
-import { styled } from '@mui/system';
-
-// Стили для заголовков и строк таблицы
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    '&:hover': {
-        backgroundColor: '#f5f5f5',
-        cursor: 'pointer',
-    },
-}));
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    fontWeight: 'bold',
-    color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.background.default,
-}));
+import '../styles/tasksTableStyles.css'; // импортируем файл с CSS стилями
 
 const TasksTable = ({ tasks }) => {
     return (
-        <TableContainer
-            component={Paper}
-            elevation={3}
-            style={{
-                margin: '20px auto',
-                maxWidth: '80%',
-                padding: '15px',
-            }}
-        >
-            <Typography
-                variant="h6"
-                align="center"
-                gutterBottom
-                style={{ fontWeight: 'bold', color: '#333' }}
-            >
+        <TableContainer component={Paper} elevation={3} className="table-container">
+            <Typography variant="h6" className="table-header" gutterBottom>
                 Tasks List
             </Typography>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Title</StyledTableCell>
-                        <StyledTableCell>Status</StyledTableCell>
-                        <StyledTableCell>Priority</StyledTableCell>
-                        <StyledTableCell>Due Date</StyledTableCell>
-                        <StyledTableCell>Assigned To</StyledTableCell>
-                        <StyledTableCell>Department</StyledTableCell>
-                        <StyledTableCell>Description</StyledTableCell>
+                        <TableCell className="styled-table-cell">Title</TableCell>
+                        <TableCell className="styled-table-cell">Status</TableCell>
+                        <TableCell className="styled-table-cell">Priority</TableCell>
+                        <TableCell className="styled-table-cell">Due Date</TableCell>
+                        <TableCell className="styled-table-cell">Assigned To</TableCell>
+                        <TableCell className="styled-table-cell">Department</TableCell>
+                        <TableCell className="styled-table-cell">Description</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tasks.map((task) => (
-                        <StyledTableRow key={task.id}>
+                        <TableRow key={task.id} className="styled-table-row">
                             <TableCell>{task.title}</TableCell>
                             <TableCell>{task.status}</TableCell>
                             <TableCell
-                                style={{
-                                    color:
-                                        task.priority === 'HIGH'
-                                            ? '#d32f2f'
-                                            : task.priority === 'MEDIUM'
-                                                ? '#ffa726'
-                                                : '#2e7d32',
-                                    fontWeight: 'bold',
-                                }}
+                                className={
+                                    task.priority === 'HIGH'
+                                        ? 'high-priority'
+                                        : task.priority === 'MEDIUM'
+                                            ? 'medium-priority'
+                                            : 'low-priority'
+                                }
                             >
                                 {task.priority}
                             </TableCell>
@@ -81,7 +49,7 @@ const TasksTable = ({ tasks }) => {
                             <TableCell>{task.assignedTo?.username || 'N/A'}</TableCell>
                             <TableCell>{task.department?.name || 'N/A'}</TableCell>
                             <TableCell>{task.description || 'N/A'}</TableCell>
-                        </StyledTableRow>
+                        </TableRow>
                     ))}
                 </TableBody>
             </Table>

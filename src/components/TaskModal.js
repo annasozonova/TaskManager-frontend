@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
+import '../styles/modalStyles.css';
 
 Modal.setAppElement('#root');
 
@@ -35,9 +36,12 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
 
     return (
         <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Create Task" className="modal" overlayClassName="overlay">
-            <h2>Create New Task</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <div className="modal-header">
+                <h2>Create New Task</h2>
+                <button className="close-btn" onClick={onClose}>X</button>
+            </div>
+            <form onSubmit={handleSubmit} className="task-form">
+                <div className="form-group">
                     <label>Title</label>
                     <input
                         type="text"
@@ -46,14 +50,14 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
                         required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Description</label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Priority</label>
                     <select value={priority} onChange={(e) => setPriority(e.target.value)}>
                         <option value="LOW">Low</option>
@@ -61,7 +65,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
                         <option value="HIGH">High</option>
                     </select>
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Due Date</label>
                     <input
                         type="date"
@@ -69,7 +73,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
                         onChange={(e) => setDueDate(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Required Qualification</label>
                     <select value={requiredQualification} onChange={(e) => setRequiredQualification(e.target.value)}>
                         <option value="JUNIOR">Junior</option>
@@ -77,7 +81,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
                         <option value="SENIOR">Senior</option>
                     </select>
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Department</label>
                     <select
                         value={selectedDepartment}
@@ -96,9 +100,11 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
                         )}
                     </select>
                 </div>
-                <button type="submit">Create Task</button>
+                <div className="form-actions">
+                    <button type="submit" className="submit-btn">Create Task</button>
+                    <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
+                </div>
             </form>
-            <button onClick={onClose}>Close</button>
         </Modal>
     );
 };

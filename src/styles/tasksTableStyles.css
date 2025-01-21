@@ -1,0 +1,49 @@
+/* Стили для контейнера таблицы */
+.table-container {
+    margin: 20px auto;
+    max-width: 80%;
+    padding: 15px;
+}
+
+/* Стиль для заголовков таблицы */
+.table-header {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Стиль для строк таблицы */
+.styled-table-row {
+    &:nth-of-type(odd) {
+        background-color: #f5f5f5;
+    }
+
+    &:hover {
+        background-color: #f5f5f5;
+        cursor: pointer;
+    }
+}
+
+/* Стиль для ячеек таблицы */
+.styled-table-cell {
+    font-weight: bold;
+    color: #616161;
+    background-color: #f5f5f5;
+}
+
+/* Стиль для ячеек с приоритетом */
+.high-priority {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.medium-priority {
+    color: #ffa726;
+    font-weight: bold;
+}
+
+.low-priority {
+    color: #2e7d32;
+    font-weight: bold;
+}

@@ -8,8 +8,18 @@ const TasksPage = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [departments, setDepartments] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Для отслеживания состояния модального окна
+
+    // Функция для открытия модального окна
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // Функция для закрытия модального окна
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -47,10 +57,10 @@ const TasksPage = () => {
 
     return (
         <div>
-            <button onClick={() => setIsModalOpen(true)}>Create Task</button>
+            <button onClick={openModal}>Create Task</button>
             <TaskModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={closeModal}
                 onTaskCreated={handleCreateTask}
                 departments={departments}
             />
