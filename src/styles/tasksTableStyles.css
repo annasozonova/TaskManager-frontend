@@ -11,6 +11,26 @@
     color: #333;
     text-align: center;
     margin-bottom: 10px;
+    position: relative; /* Добавлено для позиционирования кнопки */
+}
+
+/* Стиль для кнопки */
+.create-task-btn {
+    position: absolute; /* Позволяет переместить кнопку внутри заголовка */
+    right: 0; /* Привязка к правому краю */
+    top: 0;
+    background-color: #1976d2;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 20px; /* Увеличиваем внутренний отступ */
+    font-size: 1rem; /* Увеличиваем шрифт */
+    border: none;
+    border-radius: 8px; /* Закругляем края больше для лучшего внешнего вида */
+    cursor: pointer;
+}
+
+.create-task-btn:hover {
+    background-color: #1565c0;
 }
 
 /* Стиль для строк таблицы */
@@ -21,29 +41,80 @@
 
     &:hover {
         background-color: #f5f5f5;
-        cursor: pointer;
     }
+}
+
+/* Стиль для заголовков таблицы */
+.styled-table-head-cell {
+    font-weight: bold !important;
+    color: #333;
+    text-align: center;
+    padding: 10px;
+    width: 150px; /* Устанавливаем фиксированную ширину для всех столбцов, кроме Description */
+    display: flex; /* Используем flex для управления расположением элементов */
+    justify-content: space-between; /* Распределяем содержимое (текст и стрелку) */
+    white-space: nowrap; /* Запрещаем перенос текста */
 }
 
 /* Стиль для ячеек таблицы */
 .styled-table-cell {
-    font-weight: bold;
+    font-weight: normal;
     color: #616161;
     background-color: #f5f5f5;
+    padding: 10px;
+    width: 150px; /* Устанавливаем фиксированную ширину для всех ячеек, кроме Description */
+    text-overflow: ellipsis; /* Добавляем многоточие для длинных строк */
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+/* Стиль для последнего столбца (Description) */
+.styled-table-head-cell.description, 
+.styled-table-cell.description {
+    width: auto; /* Этот столбец будет занимать оставшееся пространство */
+    white-space: normal; /* Разрешаем перенос текста в ячейках */
 }
 
 /* Стиль для ячеек с приоритетом */
 .high-priority {
-    color: #d32f2f;
-    font-weight: bold;
+    color: #d32f2f !important;
+    font-weight: bold !important;
 }
 
 .medium-priority {
-    color: #ffa726;
-    font-weight: bold;
+    color: #ffa726 !important;
+    font-weight: bold !important;
 }
 
 .low-priority {
-    color: #2e7d32;
-    font-weight: bold;
+    color: #2e7d32 !important;
+    font-weight: bold !important;
+}
+
+/* Стили для индикаторов сортировки */
+.sort-indicator {
+    margin-left: 5px;
+    font-size: 0.8rem;
+    color: #555;
+    vertical-align: middle;
+}
+
+/* Стиль для ячеек со статусом */
+.pending-status {
+    color: #616161 !important; /* Серый */
+    font-weight: bold !important;
+}
+
+.in-progress-status {
+    color: #ffa000 !important; /* Оранжевый */
+    font-weight: bold !important;
+}
+
+.completed-status {
+    color: #388e3c !important; /* Зеленый */
+    font-weight: bold !important;
+}
+
+.delayed-status {
+    color: #d32f2f !important; /* Красный */
+    font-weight: bold !important;
 }

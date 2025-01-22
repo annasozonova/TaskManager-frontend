@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getTasks } from '../services/apiService';
 import axios from 'axios';
 import TaskModal from '../components/TaskModal';
-import TasksTable from '../components/TaskTable';
+import TasksTable from '../components/TasksTable';
 
 const TasksPage = () => {
     const [tasks, setTasks] = useState([]);
@@ -57,14 +57,13 @@ const TasksPage = () => {
 
     return (
         <div>
-            <button onClick={openModal}>Create Task</button>
             <TaskModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 onTaskCreated={handleCreateTask}
                 departments={departments}
             />
-            <TasksTable tasks={tasks} />
+            <TasksTable tasks={tasks} onOpenModal={openModal} />
         </div>
     );
 };
