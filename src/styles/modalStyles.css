@@ -64,7 +64,7 @@
 }
 
 /* Формы */
-.task-form {
+.form {
     display: flex;
     flex-direction: column;
 }

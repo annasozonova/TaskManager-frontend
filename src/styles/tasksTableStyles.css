@@ -74,22 +74,6 @@
     white-space: normal; /* Разрешаем перенос текста в ячейках */
 }
 
-/* Стиль для ячеек с приоритетом */
-.high-priority {
-    color: #d32f2f !important;
-    font-weight: bold !important;
-}
-
-.medium-priority {
-    color: #ffa726 !important;
-    font-weight: bold !important;
-}
-
-.low-priority {
-    color: #2e7d32 !important;
-    font-weight: bold !important;
-}
-
 /* Стили для индикаторов сортировки */
 .sort-indicator {
     margin-left: 5px;
@@ -98,23 +82,28 @@
     vertical-align: middle;
 }
 
-/* Стиль для ячеек со статусом */
-.pending-status {
-    color: #616161 !important; /* Серый */
-    font-weight: bold !important;
+/* Стили для приоритета и статуса*/
+.status-circle, .priority-circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+/* Стили для иконок*/
+.icon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    margin: 0 8px;
 }
 
-.in-progress-status {
-    color: #ffa000 !important; /* Оранжевый */
-    font-weight: bold !important;
+.actions-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
-.completed-status {
-    color: #388e3c !important; /* Зеленый */
-    font-weight: bold !important;
-}
 
-.delayed-status {
-    color: #d32f2f !important; /* Красный */
-    font-weight: bold !important;
-}

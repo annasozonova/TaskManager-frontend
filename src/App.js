@@ -4,6 +4,7 @@ import UsersPage from './pages/UsersPage'; // Страница с пользов
 import TasksPage from './pages/TasksPage'; // Страница с задачами
 import HomePage from './pages/HomePage'; // Главная страница
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import LoginPage from "./pages/LoginPage";
 
 const theme = createTheme({
     palette: {
@@ -24,6 +25,7 @@ const App = () => {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/login" element={<LoginPage />} />
                     <Route path="*" element={<div>Page not found</div>} />
                 </Routes>
             </Router>

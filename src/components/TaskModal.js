@@ -1,17 +1,50 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
 import '../styles/modalStyles.css';
 
 Modal.setAppElement('#root');
 
-const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
+const TaskModal = ({ currentUser, isOpen, onClose, onTaskCreated, departments, task }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('LOW');
     const [dueDate, setDueDate] = useState('');
     const [requiredQualification, setRequiredQualification] = useState('JUNIOR');
     const [selectedDepartment, setSelectedDepartment] = useState('');
+    const [status, setStatus] = useState('PENDING');
+    const [assignedTo, setAssignedTo] = useState(null);
+
+    useEffect(() => {
+        if (task) {
+            setTitle(task.title || '');
+            setDescription(task.description || '');
+            setPriority(task.priority || 'LOW');
+            setDueDate(task.dueDate || '');
+            setRequiredQualification(task.requiredQualification || 'JUNIOR');
+            setSelectedDepartment(task.department?.id || '');
+            setStatus(task.status || 'PENDING');
+            setAssignedTo(task.assignedTo || null);
+        } else {
+            resetForm();
+        }
+    }, [task]);
+
+    useEffect(() => {
+        if (currentUser.role === 'EMPLOYEE' && currentUser.qualification) {
+            setRequiredQualification(currentUser.qualification.qualification);
+        }
+    }, [currentUser]);
+
+    const resetForm = () => {
+        setTitle('');
+        setDescription('');
+        setPriority('LOW');
+        setDueDate('');
+        setRequiredQualification('JUNIOR');
+        setSelectedDepartment('');
+        setStatus('PENDING');
+        setAssignedTo(null);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,25 +55,24 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
             priority,
             dueDate,
             requiredQualification,
-            department: { id: selectedDepartment },
+            status,
+            assignedTo: { id: currentUser.role === 'EMPLOYEE' ? currentUser.id : assignedTo},
+            department: {
+                id: currentUser.role === 'ADMIN' ? selectedDepartment :
+                    currentUser.role === 'DEPARTMENT_HEAD' || 'EMPLOYEE' ? currentUser.department.id : undefined
+            }
         };
 
-        try {
-            const response = await axios.post('http://localhost:8080/api/tasks', taskData);
-            onTaskCreated(response.data);
-            onClose();
-        } catch (error) {
-            console.error('Error creating task:', error);
-        }
+        onTaskCreated(taskData);
+        onClose();
     };
 
     return (
         <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Create Task" className="modal" overlayClassName="overlay">
             <div className="modal-header">
-                <h2>Create New Task</h2>
-                <button className="close-btn" onClick={onClose}>X</button>
+                <h2>{task ? 'Edit Task' : 'Create New Task'}</h2>                <button className="close-btn" onClick={onClose}>X</button>
             </div>
-            <form onSubmit={handleSubmit} className="task-form">
+            <form onSubmit={handleSubmit} className="form">
                 <div className="form-group">
                     <label>Title</label>
                     <input
@@ -73,35 +105,50 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, departments }) => {
                         onChange={(e) => setDueDate(e.target.value)}
                     />
                 </div>
-                <div className="form-group">
-                    <label>Required Qualification</label>
-                    <select value={requiredQualification} onChange={(e) => setRequiredQualification(e.target.value)}>
-                        <option value="JUNIOR">Junior</option>
-                        <option value="MID_LEVEL">Mid-Level</option>
-                        <option value="SENIOR">Senior</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label>Department</label>
-                    <select
-                        value={selectedDepartment}
-                        onChange={(e) => setSelectedDepartment(e.target.value)}
-                        required
-                    >
-                        <option value="" disabled>Select a department</option>
-                        {departments && departments.length > 0 ? (
-                            departments.map(department => (
+                {currentUser.role !== 'EMPLOYEE' && (
+                    <div className="form-group">
+                        <label>Required Qualification</label>
+                        <select value={requiredQualification}
+                                onChange={(e) => setRequiredQualification(e.target.value)}>
+                            <option value="JUNIOR">Junior</option>
+                            <option value="MID_LEVEL">Mid-Level</option>
+                            <option value="SENIOR">Senior</option>
+                        </select>
+                    </div>
+                )}
+                {task && ( // Отображаем поле статуса только при редактировании задачи
+                    <div className="form-group">
+                        <label>Status</label>
+                        <select value={status} onChange={(e) => setStatus(e.target.value)} required>
+                            <option value="PENDING">Pending</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="DELAYED">Delayed</option>
+                        </select>
+                    </div>
+                )}
+                {currentUser.role === 'ADMIN' && (
+                    <div className="form-group">
+                        <label>Department</label>
+                        <select
+                            value={selectedDepartment}
+                            onChange={(e) => setSelectedDepartment(e.target.value)}
+                            required
+                        >
+                            <option value="" disabled>Select a department</option>
+                            {departments.map(department => (
                                 <option key={department.id} value={department.id}>
                                     {department.name}
                                 </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>No departments available</option>
-                        )}
-                    </select>
-                </div>
+                            ))}
+                        </select>
+                    </div>
+                )}
+                {currentUser.role !== 'ADMIN' && (
+                    <input type="hidden" value={currentUser.department.id} />
+                )}
                 <div className="form-actions">
-                    <button type="submit" className="submit-btn">Create Task</button>
+                    <button type="submit" className="submit-btn">{task ? 'Save Changes' : 'Create Task'}</button>
                     <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
                 </div>
             </form>

@@ -1,59 +1,120 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers } from '../services/apiService'; // Импортируем сервис для получения данных
+import axios from 'axios';
+import UsersTable from '../components/UsersTable';
+import UserModal from '../components/UserModal';
+import { getUsers, createUser, updateUser, deleteUser } from '../services/apiService';
 
 const UsersPage = () => {
-    const [users, setUsers] = useState([]);  // Состояние для хранения списка пользователей
-    const [loading, setLoading] = useState(true);  // Состояние для отслеживания загрузки
-    const [error, setError] = useState(null);  // Состояние для отслеживания ошибок
+    const [users, setUsers] = useState([]);
+    const [qualifications, setQualifications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [departments, setDepartments] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editingUser, setEditingUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
 
-    // Загружаем пользователей при монтировании компонента
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => {
+        setModalOpen(false);
+        setEditingUser(null);
+    };
+
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getUsers();  // Запрашиваем список пользователей
-                setUsers(data);  // Сохраняем данные в состояние
+                const token = localStorage.getItem('token');
+                const [usersData, departmentsData, qualificationsData, currentUserData] = await Promise.all([
+                    getUsers(token),
+                    axios.get('http://localhost:8080/api/departments', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then(response => response.data),
+                    axios.get('http://localhost:8080/api/qualifications', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then(response => response.data),
+                    axios.get('http://localhost:8080/api/currentUser', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then(response => response.data),
+                ]);
+
+                setUsers(Array.isArray(usersData) ? usersData : []);
+                setDepartments(Array.isArray(departmentsData) ? departmentsData : []);
+                setQualifications(Array.isArray(qualificationsData) ? qualificationsData : []);
+                setCurrentUser(currentUserData);
             } catch (err) {
-                setError('Error fetching users: ', err);  // Если ошибка, сохраняем сообщение об ошибке
+                setError('Error fetching data: ' + err.message);
             } finally {
-                setLoading(false);  // Убираем индикатор загрузки
+                setLoading(false);
             }
         };
 
-        fetchUsers();  // Вызов функции для загрузки пользователей
-    }, []);  // Зависимость пустая, чтобы запрос выполнялся только один раз при монтировании
+        fetchData();
+    }, []);
 
-    if (loading) return <p>Loading...</p>;  // Если идет загрузка, показываем "Loading"
-    if (error) return <p>{error}</p>;  // Если произошла ошибка, выводим сообщение об ошибке
+    const handleCreateUser = () => {
+        setEditingUser(null);
+        openModal();
+    };
+
+    const handleEditUser = (user) => {
+        setEditingUser(user);
+        openModal();
+    };
+
+    const handleSaveUser = async (user) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (editingUser && editingUser.id) {
+                const updatedUser = await updateUser(editingUser.id, user, token);
+                setUsers((prevUsers) =>
+                    prevUsers.map((u) => (u.id === updatedUser.id ? updatedUser : u))
+                );
+            } else {
+                const createdUser = await createUser(user, token);
+                setUsers((prevUsers) => [...prevUsers, createdUser]);
+            }
+            closeModal();
+        } catch (err) {
+            setError('Error saving user: ' + err.message);
+        }
+    };
+
+    const handleDeleteUser = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            await deleteUser(id, token);
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+        } catch (err) {
+            setError('Error deleting user: ' + err.message);
+        }
+    };
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <div>
-            <h1>Users</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>First name</th>
-                    <th>Last name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Department</th>
-                    <th>Qualification</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users.map((user) => (
-                    <tr key={user.id}>
-                        <td>{user.username || 'Not provided'}</td>
-                        <td>{user.firstName || 'Not provided'}</td>
-                        <td>{user.lastName || 'Not provided'}</td>
-                        <td>{user.email || 'Not provided'}</td>
-                        <td>{user.role || 'Not provided'}</td>
-                        <td>{user.departmentName || 'Not provided'}</td>
-                        <td>{user.qualificationType || 'Not provided'}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <UserModal
+                currentUser={currentUser}
+                isOpen={modalOpen}
+                onClose={closeModal}
+                userToEdit={editingUser}
+                onSave={handleSaveUser}
+                departments={departments}
+                qualifications={qualifications}
+            />
+            <UsersTable
+                users={users}
+                onEdit={handleEditUser}
+                onDelete={handleDeleteUser}
+                onOpenModal={handleCreateUser}
+            />
         </div>
     );
 };
