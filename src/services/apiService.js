@@ -132,3 +132,33 @@ export const auth = async ({ username, password }) => {
         throw error;
     }
 };
+
+// Получение уведомлений сотрудника
+export const getEmployeeNotifications = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/employee/notifications`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching employee notifications:', error);
+        throw error;
+    }
+};
+
+// Получение профиля сотрудника
+export const getEmployeeProfile = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/employee/profile`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching employee profile:', error);
+        throw error;
+    }
+};

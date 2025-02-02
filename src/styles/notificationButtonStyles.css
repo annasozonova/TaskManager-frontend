@@ -1,0 +1,6 @@
+.notification-button {
+    position: fixed;
+    top: 20px;
+    right: 90px; /* Расположение кнопки уведомлений чуть левее кнопки профиля */
+    z-index: 1000;
+}

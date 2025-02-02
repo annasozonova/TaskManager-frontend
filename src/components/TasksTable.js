@@ -7,8 +7,7 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Typography,
-    Button
+    Typography
 } from '@mui/material';
 
 // Импорт стилей

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import '../styles/Login.css'
+import '../styles/login.css'
 import axios from 'axios';
-import {auth} from "../services/apiService";
+import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -17,12 +19,9 @@ const LoginPage = () => {
             const token = response.data.token;
             localStorage.setItem('token', token);
             setMessage('Login successful!');
-        } catch (error) {
-            if (error.response) {
-                setMessage('Login failed: ' + error.response.data);
-            } else {
-                setMessage('Login failed: ' + error.message);
-            }
+            navigate('/profile');
+        } catch (err) {
+            setError('Invalid username or password');
         }
     };
 
@@ -52,6 +51,7 @@ const LoginPage = () => {
                         required
                     />
                 </div>
+                {error && <p className="error">{error}</p>}
                 <button className="button-login" type="submit">Login</button>
             </form>
             {message && <div className="message">{message}</div>}
