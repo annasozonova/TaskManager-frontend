@@ -3,6 +3,7 @@ import axios from 'axios';
 import UsersTable from '../components/UsersTable';
 import UserModal from '../components/UserModal';
 import { getUsers, createUser, updateUser, deleteUser } from '../services/apiService';
+import {useLocation} from "react-router-dom";
 
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
@@ -13,6 +14,9 @@ const UsersPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+    const [highlightedUserId, setHighlightedUserId] = useState(null);
+
+    const location = useLocation();
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
@@ -56,6 +60,14 @@ const UsersPage = () => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const userId = params.get('highlightedUserId');
+        if (userId) {
+            setHighlightedUserId(parseInt(userId, 10));
+        }
+    }, [location.search]);
 
     const handleCreateUser = () => {
         setEditingUser(null);
@@ -114,6 +126,7 @@ const UsersPage = () => {
                 onEdit={handleEditUser}
                 onDelete={handleDeleteUser}
                 onOpenModal={handleCreateUser}
+                highlightedUserId={highlightedUserId}
             />
         </div>
     );

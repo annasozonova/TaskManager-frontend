@@ -121,22 +121,26 @@ export const deleteTask = async (id, token) => {
     }
 };
 
-//Авторизация
-export const auth = async ({ username, password }) => {
+
+// Получение непрочитанных уведомлений сотрудника
+export const getUnreadNotifications = async (token) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, { username, password }, {
-            withCredentials: true});
+        const response = await axios.get(`${API_URL}/notifications/unread`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
-        console.error('Error authorizing:', error);
+        console.error('Error fetching employee unread notifications:', error);
         throw error;
     }
 };
 
-// Получение уведомлений сотрудника
-export const getEmployeeNotifications = async (token) => {
+// Получение ВСЕХ уведомлений сотрудника
+export const getAllNotifications = async (token) => {
     try {
-        const response = await axios.get(`${API_URL}/employee/notifications`, {
+        const response = await axios.get(`${API_URL}/notifications`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -148,17 +152,16 @@ export const getEmployeeNotifications = async (token) => {
     }
 };
 
-// Получение профиля сотрудника
-export const getEmployeeProfile = async (token) => {
+// Пометка уведомлений как прочитанные
+export const markNotificationAsRead = async (id, token) => {
     try {
-        const response = await axios.get(`${API_URL}/employee/profile`, {
+        await axios.put(`${API_URL}/notifications/mark-as-read/${id}`, {}, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        return response.data;
     } catch (error) {
-        console.error('Error fetching employee profile:', error);
+        console.error('Error reading notification:', error);
         throw error;
     }
 };

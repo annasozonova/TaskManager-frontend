@@ -18,30 +18,30 @@ const NavigationModal = ({ open, onClose }) => {
                     </IconButton>
                     <span className="modal-title">Task Manager</span>
                 </div>
-                <List>
-                    <ListItem button component={Link} to="/dashboard" onClick={onClose}>
-                        <ListItemIcon>
+                <List className="modal-list">
+                    <ListItem component={Link} to="/dashboard" onClick={onClose}>
+                        <ListItemIcon className="list-icon">
                             <DashboardIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
+                        <ListItemText primary="Dashboard" className="list-text" />
                     </ListItem>
-                    <ListItem button component={Link} to="/tasks" onClick={onClose}>
-                        <ListItemIcon>
+                    <ListItem component={Link} to="/tasks" onClick={onClose}>
+                        <ListItemIcon className="list-icon">
                             <TaskIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Tasks" />
+                        <ListItemText primary="Tasks" className="list-text" />
                     </ListItem>
-                    <ListItem button component={Link} to="/profile" onClick={onClose}>
-                        <ListItemIcon>
+                    <ListItem component={Link} to="/profile" onClick={onClose}>
+                        <ListItemIcon className="list-icon">
                             <ProfileIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Profile" />
+                        <ListItemText primary="Profile" className="list-text" />
                     </ListItem>
-                    <ListItem button component={Link} to="/notifications" onClick={onClose}>
-                        <ListItemIcon>
+                    <ListItem component={Link} to="/notifications" onClick={onClose}>
+                        <ListItemIcon className="list-icon">
                             <NotificationsIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Notifications" />
+                        <ListItemText primary="Notifications" className="list-text" />
                     </ListItem>
                 </List>
             </div>

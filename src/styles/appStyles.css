@@ -1,6 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Roboto", serif;
+}
+
+/* Переопределяем стили MUI */
+.MuiButtonBase-root-MuiButton-root,
+.MuiTableCell-root,
+.MuiButtonBase-root,
+.MuiTypography-root,
+.MuiButton-label,
+.MuiListItemText-primary,
+.MuiListItemText-secondary {
+    font-family: "Roboto", serif !important;
 }
 
 #root {
@@ -9,4 +22,15 @@ body {
 
 .content {
     margin: 20px;
+    font-family: "Roboto", serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Roboto", serif;
+    font-weight: 700; /* Жирный шрифт для заголовков */
+}
+
+p, span, div, a, li, button {
+    font-family: "Roboto", serif;
+    font-weight: 400; /* Обычный шрифт для текста */
 }

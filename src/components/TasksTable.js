@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
     Table,
     TableBody,
@@ -7,68 +7,69 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Typography
+    Typography,
+    Tooltip,
+    Button
 } from '@mui/material';
-
-// Импорт стилей
 import '../styles/tasksTableStyles.css';
 import DeleteIcon from '../assets/delete-button-3.png';
 import EditIcon from '../assets/edit-button-2.png';
 
-const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete }) => {
-    const [sortedTasks, setSortedTasks] = useState(tasks); // Локальное состояние для сортированных задач
+const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete, highlightedTaskId }) => {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+    const highlightedRef = useRef(null);
 
-    useEffect(() => {
-        setSortedTasks(tasks); // Обновление отсортированных задач при изменении списка задач
-    }, [tasks]);
+    // Memoized sorted tasks to optimize performance
+    const sortedTasks = useMemo(() => {
+        const priorityOrder = { HIGH: 1, MEDIUM: 2, LOW: 3 };
+        return [...tasks].sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
 
-    const sortTasks = (key) => {
-        const newDirection = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
-
-        const priorityOrder = { HIGH: 1, MEDIUM: 2, LOW: 3 }; // Порядок сортировки приоритетов
-
-        const sorted = [...tasks].sort((a, b) => {
-            let aValue = a[key];
-            let bValue = b[key];
-
-            // Обработка вложенных объектов
-            if (key === 'department') {
+            // Handle nested objects
+            if (sortConfig.key === 'department') {
                 aValue = a.department?.name || '';
                 bValue = b.department?.name || '';
-            } else if (key === 'assignedTo') {
+            } else if (sortConfig.key === 'assignedTo') {
                 aValue = a.assignedTo?.username || '';
                 bValue = b.assignedTo?.username || '';
-            } else if (key === 'priority') {
+            } else if (sortConfig.key === 'priority') {
                 aValue = priorityOrder[a.priority] || Infinity;
                 bValue = priorityOrder[b.priority] || Infinity;
             }
 
-            // Сравнение значений
-            if (aValue < bValue) return newDirection === 'asc' ? -1 : 1;
-            if (aValue > bValue) return newDirection === 'asc' ? 1 : -1;
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         });
+    }, [tasks, sortConfig]);
 
-        setSortedTasks(sorted);
+    useEffect(() => {
+        if (highlightedRef.current) {
+            highlightedRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [highlightedTaskId]);
+
+    useEffect(() => {
+        console.log('highlightedTaskId in TasksTable:', highlightedTaskId);
+    }, [highlightedTaskId]);
+
+    const sortTasks = (key) => {
+        const newDirection = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
         setSortConfig({ key, direction: newDirection });
     };
 
     const getSortIndicator = (key) => {
         if (sortConfig.key !== key) return null;
-        return (
-            <span className="sort-indicator">
-                {sortConfig.direction === 'asc' ? '▲' : '▼'}
-            </span>
-        );
+        return <span className="sort-indicator">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>;
     };
 
     const capitalizeStatus = (status) => {
         return status
             .replace('_', ' ')
             .toLowerCase()
-            .split(' ') // на случай нескольких слов
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // делаем первую букву каждого слова заглавной
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
     };
 
@@ -83,7 +84,7 @@ const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete }) => {
         return (
             <>
                 <span className="status-circle" style={{ backgroundColor: color }} />
-                <span>{capitalizeStatus(status)}</span> {/* Применение capitalizeStatus */}
+                <span>{capitalizeStatus(status)}</span>
             </>
         );
     };
@@ -98,7 +99,7 @@ const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete }) => {
         return (
             <>
                 <span className="priority-circle" style={{ backgroundColor: color }} />
-                <span>{priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase()}</span> {/* Преобразуем приоритет */}
+                <span>{priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase()}</span>
             </>
         );
     };
@@ -109,52 +110,60 @@ const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete }) => {
                 <Typography variant="h6" className="table-title" gutterBottom>
                     Tasks List
                 </Typography>
-                <button className="create-task-btn" onClick={onOpenModal}>
+                <Button variant="contained" onClick={onOpenModal} className="create-task-btn">
                     Create Task
-                </button>
+                </Button>
             </div>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('title')}>
+                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('title')} aria-label="Sort by title">
                             Title {getSortIndicator('title')}
                         </TableCell>
-                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('status')}>
+                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('status')} aria-label="Sort by status">
                             Status {getSortIndicator('status')}
                         </TableCell>
-                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('priority')}>
+                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('priority')} aria-label="Sort by priority">
                             Priority {getSortIndicator('priority')}
                         </TableCell>
-                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('dueDate')}>
+                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('dueDate')} aria-label="Sort by due date">
                             Due Date {getSortIndicator('dueDate')}
                         </TableCell>
-                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('assignedTo')}>
+                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('assignedTo')} aria-label="Sort by assigned to">
                             Assigned To {getSortIndicator('assignedTo')}
                         </TableCell>
-                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('department')}>
+                        <TableCell className="styled-table-head-cell" onClick={() => sortTasks('department')} aria-label="Sort by department">
                             Department {getSortIndicator('department')}
                         </TableCell>
-                        <TableCell className="styled-table-head-cell description">
-                            Description
-                        </TableCell>
-                        <TableCell className="styled-table-head-cell">
-                            Actions
-                        </TableCell>
+                        <TableCell className="styled-table-head-cell description">Description</TableCell>
+                        <TableCell className="styled-table-head-cell action">Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {sortedTasks.map((task) => (
-                        <TableRow key={task.id} className="styled-table-row">
+                        <TableRow
+                            key={task.id}
+                            className={`styled-table-row ${String(task.id) === String(highlightedTaskId) ? "highlighted-row" : ""}`}
+                            ref={task.id === highlightedTaskId ? highlightedRef : null}
+                        >
                             <TableCell>{task.title}</TableCell>
                             <TableCell>{getStatusCircleWithText(task.status)}</TableCell>
                             <TableCell>{getPriorityCircleWithText(task.priority)}</TableCell>
                             <TableCell>{task.dueDate || 'N/A'}</TableCell>
                             <TableCell>{task.assignedTo?.username || 'N/A'}</TableCell>
                             <TableCell>{task.department?.name || 'N/A'}</TableCell>
-                            <TableCell>{task.description || 'N/A'}</TableCell>
-                            <TableCell className="actions-cell">
-                                <img src={EditIcon} alt="Edit" onClick={() => onEdit(task)} className="icon" />
-                                <img src={DeleteIcon} alt="Delete" onClick={() => onDelete(task.id)} className="icon" />
+                            <TableCell>
+                                <Tooltip title={task.description || 'No description available'}>
+                                    <span>{task.description ? `${task.description.slice(0, 50)}...` : 'N/A'}</span>
+                                </Tooltip>
+                            </TableCell>
+                            <TableCell className="action-column">
+                                <Button onClick={() => onEdit(task)} className="icon-button" aria-label="Edit task">
+                                    <img src={EditIcon} alt="Edit" className="icon" />
+                                </Button>
+                                <Button onClick={() => onDelete(task.id)} className="icon-button" aria-label="Delete task">
+                                    <img src={DeleteIcon} alt="Delete" className="icon" />
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     Table,
     TableBody,
@@ -17,14 +17,22 @@ const UsersTable = ({
                         onEdit,
                         onDelete,
                         onOpenModal,
+                        highlightedUserId,
                     }) => {
     const [sortedUsers, setSortedUsers] = useState(users); // Локальное состояние для сортированных пользователей
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+    const highlightedRef = useRef(null);
 
     useEffect(() => {
         // Устанавливаем пользователей в sortedUsers сразу при загрузке
         setSortedUsers(users);
     }, [users.length]);
+
+    useEffect(() => {
+        if (highlightedRef.current) {
+            highlightedRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [highlightedUserId]);
 
     const sortUsers = (key) => {
         const newDirection =
@@ -109,7 +117,11 @@ const UsersTable = ({
                 </TableHead>
                 <TableBody>
                     {sortedUsers.map((user) => (
-                        <TableRow key={user.id}>
+                        <TableRow
+                            key={user.id}
+                            className={user.id === highlightedUserId ? "highlighted-row" : ""}
+                            ref={user.id === highlightedUserId ? highlightedRef : null}
+                        >
                             <TableCell>{user.username}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.firstName || "N/A"}</TableCell>

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Modal from 'react-modal';
 import '../styles/modalStyles.css';
+import axios from "axios";
 
 Modal.setAppElement('#root');
 
@@ -27,11 +28,26 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
             setStatus(task.status || 'PENDING');
             setAssignedTo(task.assignedTo || null);
             setComments('');
-            setExistingComments(task.comments || []);
+
+            fetchComments(task.id);
         } else {
             resetForm();
         }
     }, [task]);
+
+    const fetchComments = async (taskId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`http://localhost:8080/api/tasks/${taskId}/comments`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setExistingComments(response.data);
+        } catch (error) {
+            console.error('Failed to fetch comments:', error);
+        }
+    };
 
     useEffect(() => {
         if (currentUser.role === 'EMPLOYEE' && currentUser.qualification) {
@@ -62,15 +78,26 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
             dueDate,
             requiredQualification,
             status,
-            assignedTo: {id: currentUser.role === 'EMPLOYEE' ? currentUser.id : assignedTo},
+            assignedTo: assignedTo ? { id: assignedTo } : null,
             department: {
                 id: currentUser.role === 'ADMIN' ? selectedDepartment :
-                    currentUser.role === 'DEPARTMENT_HEAD' || 'EMPLOYEE' ? currentUser.department.id : undefined
+                    (currentUser.role === 'DEPARTMENT_HEAD' || currentUser.role === 'EMPLOYEE') ? currentUser.department.id : undefined
             },
-            comments: currentUser.role === 'EMPLOYEE' ? comments : undefined
+            comments: comments.trim() ? comments : null // Отправляем только если комментарий не пустой
         };
 
         onTaskCreated(taskData);
+
+        /*if (comments.trim()) {
+            const token = localStorage.getItem('token');
+            await axios.post(`http://localhost:8080/api/tasks/${response.data.id}/comments`, comments, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        }*/
+
         onClose();
     };
 
@@ -102,25 +129,26 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                         readOnly={task && currentUser.role === 'EMPLOYEE'}
                     />
                 </div>
-                {currentUser.role === 'EMPLOYEE' && (
-                    <div className="form-group">
-                        <label>Comments</label>
-                        <textarea
-                            value={comments}
-                            onChange={(e) => setComments(e.target.value)}
-                        />
-                    </div>
-                )}
+                <div className="form-group">
+                    <label>Comments</label>
+                    <textarea
+                        value={comments}
+                        onChange={(e) => setComments(e.target.value)}
+                    />
+                </div>
                 {existingComments.length > 0 && (
                     <div className="form-group">
                         <label>Existing Comments</label>
                         <ul>
-                            {existingComments.map((comment, index) => (
-                                <li key={index}>{comment}</li>
+                            {existingComments.map((commentObj) => (
+                                <li key={commentObj.id}>
+                                    <strong>{new Date(commentObj.createdAt).toLocaleString()}</strong>: {commentObj.comment}
+                                </li>
                             ))}
                         </ul>
                     </div>
                 )}
+
                 <div className="form-group">
                     <label>Priority</label>
                     <select value={priority} onChange={(e) => setPriority(e.target.value)}>

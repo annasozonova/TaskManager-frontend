@@ -6,7 +6,6 @@
     display: flex;
     align-items: center; /* Центрируем элементы по вертикали */
     justify-content: space-between;
-    padding: 0 20px;
     position: fixed; /* Фиксированное положение */
     top: 0;
     left: 0;
@@ -14,6 +13,7 @@
 }
 
 .left-section {
+    margin-left: 10px;
     display: flex;
     align-items: center; /* Центрируем элементы по вертикали */
     position: relative; /* Разрешаем использование top и bottom для элементов внутри */

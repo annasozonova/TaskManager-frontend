@@ -3,15 +3,20 @@ import { createTask, deleteTask, getTasks, updateTask } from '../services/apiSer
 import axios from 'axios';
 import TaskModal from '../components/TaskModal';
 import TasksTable from '../components/TasksTable';
+import { useLocation } from 'react-router-dom';
 
 const TasksPage = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [departments, setDepartments] = useState([]);
-    const [modalOpen, setModalOpen] = useState(false); // Для отслеживания состояния модального окна
+    const [modalOpen, setModalOpen] = useState(false); // For modal window state
     const [editingTask, setEditingTask] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const highlightedTaskId = queryParams.get('highlightedTaskId');
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -26,12 +31,12 @@ const TasksPage = () => {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
-                    }).then(response => response.data),
+                    }).then((response) => response.data),
                     axios.get('http://localhost:8080/api/currentUser', {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
-                    }).then(response => response.data)
+                    }).then((response) => response.data)
                 ]);
 
                 setTasks(tasksData);
@@ -46,6 +51,14 @@ const TasksPage = () => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        console.log('Fetched tasks:', tasks);
+    }, [tasks]);
+
+    useEffect(() => {
+        console.log('highlightedTaskId:', highlightedTaskId);
+    }, [highlightedTaskId]);
 
     const handleCreateTask = () => {
         setEditingTask(null);
@@ -104,6 +117,7 @@ const TasksPage = () => {
                 onOpenModal={handleCreateTask}
                 onEdit={handleEditTask}
                 onDelete={handleDeleteTask}
+                highlightedTaskId={highlightedTaskId}
             />
         </div>
     );

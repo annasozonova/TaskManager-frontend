@@ -1,6 +1,7 @@
 .user-profile-button {
     position: fixed;
-    top: 20px;
     right: 20px;
     z-index: 1000;
+    display: flex;
+    align-items: center;
 }

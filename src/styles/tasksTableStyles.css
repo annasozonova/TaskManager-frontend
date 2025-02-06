@@ -16,17 +16,19 @@
 
 /* Стиль для кнопки */
 .create-task-btn {
-    position: absolute; /* Позволяет переместить кнопку внутри заголовка */
-    right: 0; /* Привязка к правому краю */
-    top: 0;
-    background-color: #1976d2;
-    color: #fff;
-    font-weight: bold;
-    padding: 10px 20px; /* Увеличиваем внутренний отступ */
-    font-size: 1rem; /* Увеличиваем шрифт */
-    border: none;
-    border-radius: 8px; /* Закругляем края больше для лучшего внешнего вида */
-    cursor: pointer;
+    position: absolute !important; /* Позволяет переместить кнопку внутри заголовка */
+    right: 0 !important; /* Привязка к правому краю */
+    top: 0 !important;
+    background-color: #1976d2 !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    padding: 10px 20px !important; /* Увеличиваем внутренний отступ */
+    font-size: 1rem !important; /* Увеличиваем шрифт */
+    border: none !important;
+    border-radius: 8px !important; /* Закругляем края больше для лучшего внешнего вида */
+    cursor: pointer !important;
+    text-transform: none !important;
+    line-height: 20px !important;
 }
 
 .create-task-btn:hover {
@@ -51,7 +53,6 @@
     text-align: center;
     padding: 10px;
     width: 150px; /* Устанавливаем фиксированную ширину для всех столбцов, кроме Description */
-    display: flex; /* Используем flex для управления расположением элементов */
     justify-content: space-between; /* Распределяем содержимое (текст и стрелку) */
     white-space: nowrap; /* Запрещаем перенос текста */
 }
@@ -65,6 +66,19 @@
     width: 150px; /* Устанавливаем фиксированную ширину для всех ячеек, кроме Description */
     text-overflow: ellipsis; /* Добавляем многоточие для длинных строк */
     white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+.styled-table-head-cell.action {
+    text-align: center !important;
+}
+
+/* Стиль для столбца с действиями */
+.action-column {
+    text-align: center !important; /* Выравниваем по центру */
+    display: flex; /* Используем flex для управления расположением значков */
+    justify-content: center; /* Центрируем значки */
+    align-items: center !important; /* Центрируем значки по вертикали */
+    gap: 10px; /* Отступ между значками */
 }
 
 /* Стиль для последнего столбца (Description) */
@@ -99,11 +113,19 @@
     margin: 0 8px;
 }
 
-.actions-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+.styled-table-row {
+    transition: background-color 0.3s ease, transform 0.3s ease !important;
 }
+
+.styled-table-row.highlighted-row {
+    background-color: #f0f8ff !important; /* мягкий голубой фон */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important; /* тень */
+    transform: scale(1.02) !important; /* небольшой эффект увеличения */
+}
+
+.styled-table-row:hover {
+    background-color: #e6f7ff !important; /* светлый фон при наведении */
+}
+
 
 

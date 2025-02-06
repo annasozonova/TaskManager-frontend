@@ -30,7 +30,17 @@ const AccountSettings = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProfile({ ...profile, [name]: value });
+        if (name === "technologies") {
+            setProfile(prevProfile => ({
+                ...prevProfile,
+                qualification: {
+                    ...prevProfile.qualification,
+                    technologies: value
+                }
+            }));
+        } else {
+            setProfile({ ...profile, [name]: value });
+        }
     };
 
     const handlePasswordChange = (e) => {
@@ -43,13 +53,17 @@ const AccountSettings = () => {
             const token = localStorage.getItem('token');
             const response = await axios.put('http://localhost:8080/api/employee/profile', {
                 email: profile.email,
-                technologies: profile?.qualification.technologies
+                qualification: {
+                    ...profile.qualification,
+                    technologies: profile.qualification.technologies
+                }
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             setProfile(response.data);
+            alert('Profile updated successfully');
         } catch (err) {
             setError('Error saving profile: ' + err.message);
         }
@@ -63,7 +77,7 @@ const AccountSettings = () => {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put('http://localhost:8080/api/auth/change-password', {
+            await axios.put('http://localhost:8080/api/users/change-password', {
                 currentPassword: passwords.currentPassword,
                 newPassword: passwords.newPassword
             }, {
@@ -73,6 +87,7 @@ const AccountSettings = () => {
             });
             setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
             setError(null);
+            alert('Password changed successfully');
         } catch (err) {
             setError('Error changing password: ' + err.message);
         }
@@ -92,7 +107,7 @@ const AccountSettings = () => {
                 </div>
                 <div className="form-group">
                     <label>Technologies:</label>
-                    <input type="text" name="technologies" value={profile?.qualification.technologies} onChange={handleInputChange} />
+                    <input type="text" name="technologies" value={profile.qualification?.technologies || ''} onChange={handleInputChange} />
                 </div>
                 <button onClick={handleSaveProfile} className="save-btn">Save Profile</button>
             </div>

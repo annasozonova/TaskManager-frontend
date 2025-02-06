@@ -1,6 +1,16 @@
 .notification-button {
     position: fixed;
-    top: 20px;
-    right: 90px; /* Расположение кнопки уведомлений чуть левее кнопки профиля */
+    align-items: center;
+    right: 90px;
     z-index: 1000;
+}
+
+.unread-notification {
+    font-weight: bold;
+    background-color: #f0f8ff;
+}
+
+.read-notification {
+    font-weight: normal;
+    background-color: white;
 }

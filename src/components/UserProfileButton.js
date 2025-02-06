@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import { Link } from 'react-router-dom';
 import '../styles/userProfileButtonStyles.css';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const UserProfileButton = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -16,9 +17,9 @@ const UserProfileButton = () => {
 
     return (
         <div className="user-profile-button">
-            <Button variant="contained" color="secondary" onClick={handleClick}>
-                User
-            </Button>
+            <IconButton color="inherit" onClick={handleClick}>
+                <AccountBoxIcon style={{ fontSize: 32 }}/>
+            </IconButton>
             <Menu
                 id="user-menu"
                 anchorEl={anchorEl}

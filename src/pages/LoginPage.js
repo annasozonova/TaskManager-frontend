@@ -13,8 +13,14 @@ const LoginPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/login', { username, password }, {
-                withCredentials: true
+            const response = await axios.post('http://localhost:8080/api/login', {
+                username,
+                password
+            }, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
             const token = response.data.token;
             localStorage.setItem('token', token);
