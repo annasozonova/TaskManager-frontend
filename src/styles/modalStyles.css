@@ -40,8 +40,9 @@
 
 /* Заголовок модального окна */
 .modal-header {
+    margin-bottom: 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between !important;
     align-items: center;
 }
 
@@ -52,6 +53,8 @@
 }
 
 .close-btn {
+    right: 0 !important; /* Привязка к правому краю */
+    top: 0 !important;
     background: none;
     border: none;
     font-size: 1.4rem;

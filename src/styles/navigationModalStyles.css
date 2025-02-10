@@ -6,35 +6,35 @@
     align-items: center;
 }
 
-.modal-header {
+.navigation-modal-header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
 }
 
-.close-button {
+.navigation-close-button {
     margin-left: 10px !important;
 }
 
-.modal-title {
+.navigation-modal-title {
     font-size: 24px;
     font-weight: bold;
     margin-left: 10px; /* Отступ для выравнивания */
     line-height: 60px; /* Обеспечим выравнивание по высоте */
 }
 
-.modal-list {
+.navigation-modal-list {
     width: 100%;
     margin-left: 10px;
 }
 
-.list-icon {
+.navigation-list-icon {
     font-size: 32px;
     min-width: 40px; /* Устанавливаем минимальную ширину для иконок */
 }
 
-.list-text {
+.navigation-list-text {
     font-size: 16px; /* Обеспечиваем выравнивание текста */
 }
 

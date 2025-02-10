@@ -14,9 +14,10 @@ const UsersPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
-    const [highlightedUserId, setHighlightedUserId] = useState(null);
 
     const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const highlightedUserId = queryParams.get('highlightedUserId');
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
@@ -62,12 +63,8 @@ const UsersPage = () => {
     }, []);
 
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const userId = params.get('highlightedUserId');
-        if (userId) {
-            setHighlightedUserId(parseInt(userId, 10));
-        }
-    }, [location.search]);
+        console.log('highlightedTaskId:', highlightedUserId);
+    }, [highlightedUserId]);
 
     const handleCreateUser = () => {
         setEditingUser(null);

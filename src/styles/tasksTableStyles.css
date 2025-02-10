@@ -1,38 +1,64 @@
-/* Стили для контейнера таблицы */
+.table-container-wrapper {
+    overflow: hidden;
+}
+
 .table-container {
     margin: 20px auto;
-    max-width: 80%;
-    padding: 15px;
+    max-width: 85%;
+    position: relative;
+    max-height: 85vh;
+    overflow: auto;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Стиль для заголовков таблицы */
 .table-header {
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    margin-bottom: 10px;
-    position: relative; /* Добавлено для позиционирования кнопки */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    z-index: 15;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding: 15px 0 10px 0;
+    border-bottom: 2px solid #ddd;
 }
 
-/* Стиль для кнопки */
+.table-title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.35rem !important;
+}
+
 .create-task-btn {
-    position: absolute !important; /* Позволяет переместить кнопку внутри заголовка */
-    right: 0 !important; /* Привязка к правому краю */
-    top: 0 !important;
+    position: relative !important;
     background-color: #1976d2 !important;
     color: #fff !important;
     font-weight: bold !important;
-    padding: 10px 20px !important; /* Увеличиваем внутренний отступ */
-    font-size: 1rem !important; /* Увеличиваем шрифт */
+    padding: 10px 20px !important;
+    font-size: 1rem !important;
     border: none !important;
-    border-radius: 8px !important; /* Закругляем края больше для лучшего внешнего вида */
+    border-radius: 8px !important;
     cursor: pointer !important;
     text-transform: none !important;
     line-height: 20px !important;
+    margin-left: auto !important;
+    margin-right: 5px !important;
 }
 
 .create-task-btn:hover {
     background-color: #1565c0;
+}
+
+/* Фиксированный заголовок таблицы */
+.sticky-table-head {
+    position: sticky;
+    top: 67px;
+    background: white;
+    z-index: 10;
 }
 
 /* Стиль для строк таблицы */
@@ -48,13 +74,14 @@
 
 /* Стиль для заголовков таблицы */
 .styled-table-head-cell {
-    font-weight: bold !important;
-    color: #333;
-    text-align: center;
-    padding: 10px;
-    width: 150px; /* Устанавливаем фиксированную ширину для всех столбцов, кроме Description */
-    justify-content: space-between; /* Распределяем содержимое (текст и стрелку) */
-    white-space: nowrap; /* Запрещаем перенос текста */
+    font-weight: bold;
+    background: #f4f4f4;
+    text-align: left;
+    padding: 16px;
+    border-bottom: 2px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 /* Стиль для ячеек таблицы */
@@ -63,32 +90,21 @@
     color: #616161;
     background-color: #f5f5f5;
     padding: 10px;
-    width: 150px; /* Устанавливаем фиксированную ширину для всех ячеек, кроме Description */
-    text-overflow: ellipsis; /* Добавляем многоточие для длинных строк */
-    white-space: nowrap; /* Запрещаем перенос текста */
+    width: 150px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .styled-table-head-cell.action {
     text-align: center !important;
 }
 
-/* Стиль для столбца с действиями */
-.action-column {
-    text-align: center !important; /* Выравниваем по центру */
-    display: flex; /* Используем flex для управления расположением значков */
-    justify-content: center; /* Центрируем значки */
-    align-items: center !important; /* Центрируем значки по вертикали */
-    gap: 10px; /* Отступ между значками */
-}
-
-/* Стиль для последнего столбца (Description) */
-.styled-table-head-cell.description, 
+.styled-table-head-cell.description,
 .styled-table-cell.description {
-    width: auto; /* Этот столбец будет занимать оставшееся пространство */
-    white-space: normal; /* Разрешаем перенос текста в ячейках */
+    width: auto;
+    white-space: normal;
 }
 
-/* Стили для индикаторов сортировки */
 .sort-indicator {
     margin-left: 5px;
     font-size: 0.8rem;
@@ -96,7 +112,6 @@
     vertical-align: middle;
 }
 
-/* Стили для приоритета и статуса*/
 .status-circle, .priority-circle {
     display: inline-block;
     width: 12px;
@@ -105,27 +120,36 @@
     margin-right: 8px;
     vertical-align: middle;
 }
-/* Стили для иконок*/
+
+
+.action-column {
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+    align-items: center !important;
+}
+
+.icon-button{
+    min-width: 18px !important;
+}
+
 .icon {
-    width: 25px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
     cursor: pointer;
-    margin: 0 8px;
+    margin: 0 4px;
 }
 
 .styled-table-row {
-    transition: background-color 0.3s ease, transform 0.3s ease !important;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .styled-table-row.highlighted-row {
-    background-color: #f0f8ff !important; /* мягкий голубой фон */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important; /* тень */
-    transform: scale(1.02) !important; /* небольшой эффект увеличения */
+    background-color: #f0f8ff; /* мягкий голубой фон */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* тень */
+    transform: scale(1.02); /* небольшой эффект увеличения */
 }
 
 .styled-table-row:hover {
-    background-color: #e6f7ff !important; /* светлый фон при наведении */
+    background-color: #e6f7ff; /* светлый фон при наведении */
 }
-
-
-

@@ -3,14 +3,16 @@ import { Badge, Button, IconButton, Menu, MenuItem, Typography } from '@mui/mate
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import '../styles/notificationsStyles.css';
 import { getAllNotifications, getUnreadNotifications, markNotificationAsRead } from "../services/apiService";
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 const NotificationButton = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [unreadNotifications, setUnreadNotifications] = useState([]);
     const [error, setError] = useState(null);
+
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -26,6 +28,8 @@ const NotificationButton = () => {
         };
 
         fetchNotifications();
+        const interval = setInterval(fetchNotifications, 60000);
+        return () => clearInterval(interval);
     }, []);
 
     const handleClick = (event) => {
@@ -50,12 +54,21 @@ const NotificationButton = () => {
     };
 
     const handleRedirect = (notification) => {
+        console.log("Handling notification click:", notification);
+
+        if (!notification.referenceId) {
+            console.error("No reference ID found in notification", notification);
+            return;
+        }
+
+        console.log(`Navigating to: /tasks?highlightedTaskId=${notification.referenceId}`);
+
         if (notification.type === 'TASK') {
             navigate(`/tasks?highlightedTaskId=${notification.referenceId}`);
-        } else if (notification.type === 'COMMENT') {
-            navigate(`/tasks?highlightedTaskId=${notification.referenceId}&view=comments`);
+            console.log("Current location after navigation:", location.pathname);
         } else if (notification.type === 'USER') {
             navigate(`/users?highlightedUserId=${notification.referenceId}`);
+            console.log("Current location after navigation:", location.pathname);
         }
     };
 
@@ -77,13 +90,14 @@ const NotificationButton = () => {
                 {notifications.slice(0, 5).map((notification) => (
                     <MenuItem
                         key={notification.id}
+                        className={notification.read ? 'read-notification' : 'unread-notification'}
                         onClick={() => {
+                            handleRedirect(notification);
                             if (!notification.read) {
                                 handleMarkAsRead(notification.id);
                             }
-                            handleRedirect(notification);
                         }}
-                        className={`notification-menu-item ${notification.read ? 'read-notification' : 'unread-notification'}`}
+                        style={{ cursor: 'pointer' }}
                     >
                         <Typography className="notification-text">
                             {notification.message}

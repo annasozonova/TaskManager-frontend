@@ -87,17 +87,6 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
         };
 
         onTaskCreated(taskData);
-
-        /*if (comments.trim()) {
-            const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:8080/api/tasks/${response.data.id}/comments`, comments, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-        }*/
-
         onClose();
     };
 
@@ -177,7 +166,7 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                         </select>
                     </div>
                 )}
-                {task && ( // Отображаем поле статуса только при редактировании задачи
+                {task && (
                     <div className="form-group">
                         <label>Status</label>
                         <select value={status} onChange={(e) => setStatus(e.target.value)} required>

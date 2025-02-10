@@ -29,6 +29,7 @@
     padding: 15px;
 }
 
+
 .notifications-page li {
     margin: 10px 0;
     padding: 10px;
@@ -41,6 +42,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .notification-text {
@@ -49,6 +51,13 @@
     overflow: hidden;
     white-space: nowrap;
     margin-right: 10px; /* Добавляем отступ справа от кнопки */
+}
+
+.notification-timestamp {
+    font-size: 0.9rem; /* Размер шрифта для времени уведомления */
+    color: #666; /* Цвет для времени уведомления */
+    flex-shrink: 0; /* Не позволяет уменьшаться */
+    margin-left: 10px; /* Отступ слева от текста уведомления */
 }
 
 /* Стили для прочитанных и непрочитанных уведомлений */
@@ -93,4 +102,9 @@
     align-items: center;
     flex-wrap: nowrap;
     overflow: hidden;
+}
+
+.notifications-page li:hover {
+    background-color: #e6f7ff; /* светлый фон при наведении */
+    transform: scale(1.01); /* небольшой эффект увеличения */
 }
