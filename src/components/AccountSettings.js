@@ -51,7 +51,7 @@ const AccountSettings = () => {
     const handleSaveProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.put('http://localhost:8080/api/employee/profile', {
+            const response = await axios.put('http://localhost:8080/api/user/profile', {
                 email: profile.email,
                 qualification: {
                     ...profile.qualification,

@@ -35,7 +35,9 @@ const Notifications = () => {
         };
 
 
-        fetchNotifications();
+        fetchNotifications().then(() => {
+            console.log("Данные загружены");
+        });
         const interval = setInterval(fetchNotifications, 60000);
         return () => clearInterval(interval);
     }, []);

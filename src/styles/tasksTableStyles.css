@@ -141,15 +141,15 @@
 }
 
 .styled-table-row {
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .styled-table-row.highlighted-row {
-    background-color: #f0f8ff; /* мягкий голубой фон */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* тень */
-    transform: scale(1.02); /* небольшой эффект увеличения */
+    background-color: #f0f8ff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.01);
 }
 
 .styled-table-row:hover {
-    background-color: #e6f7ff; /* светлый фон при наведении */
+    background-color: #e6f7ff;
 }

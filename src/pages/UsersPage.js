@@ -63,7 +63,7 @@ const UsersPage = () => {
     }, []);
 
     useEffect(() => {
-        console.log('highlightedTaskId:', highlightedUserId);
+        console.log('highlightedUserId:', highlightedUserId);
     }, [highlightedUserId]);
 
     const handleCreateUser = () => {

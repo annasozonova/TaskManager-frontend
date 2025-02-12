@@ -4,7 +4,7 @@ import UserProfileButton from './UserProfileButton';
 import NotificationButton from './NotificationButton';
 import '../styles/topBarStyles.css';
 
-const TopBar = () => {
+const TopBar = ({ onLogout }) => {
     return (
         <div className="top-bar">
             <div className="left-section">
@@ -13,7 +13,7 @@ const TopBar = () => {
             </div>
             <div className="right-section">
                 <NotificationButton />
-                <UserProfileButton />
+                <UserProfileButton onLogout={onLogout} />
             </div>
         </div>
     );

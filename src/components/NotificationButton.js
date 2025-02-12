@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Badge, Button, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import '../styles/notificationsStyles.css';
-import { getAllNotifications, getUnreadNotifications, markNotificationAsRead } from "../services/apiService";
+import { getAllNotifications, getUnreadNotifications } from "../services/apiService";
 import {useLocation, useNavigate} from 'react-router-dom';
 
 const NotificationButton = () => {
@@ -27,10 +27,12 @@ const NotificationButton = () => {
             }
         };
 
-        fetchNotifications();
+        fetchNotifications().then(() => {
+            console.log("Данные загружены");
+        });
         const interval = setInterval(fetchNotifications, 60000);
         return () => clearInterval(interval);
-    }, []);
+    }, [location.pathname]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -38,19 +40,6 @@ const NotificationButton = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const handleMarkAsRead = async (id) => {
-        try {
-            const token = localStorage.getItem('token');
-            await markNotificationAsRead(id, token);
-            setNotifications(notifications.map(notification =>
-                notification.id === id ? { ...notification, read: true } : notification
-            ));
-            setUnreadNotifications(unreadNotifications.filter(notification => notification.id !== id));
-        } catch (error) {
-            console.error('Failed to mark notification as read:', error);
-        }
     };
 
     const handleRedirect = (notification) => {
@@ -70,6 +59,8 @@ const NotificationButton = () => {
             navigate(`/users?highlightedUserId=${notification.referenceId}`);
             console.log("Current location after navigation:", location.pathname);
         }
+
+        handleClose();
     };
 
     return (
@@ -80,22 +71,28 @@ const NotificationButton = () => {
                 </Badge>
             </IconButton>
             <Menu
-                id="notification-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                className='notification-menu'
+                PaperProps={{
+                    sx: {
+                        width: '40%',
+                        maxWidth: '400px', // Ограничим, чтобы не раздувалось на больших экранах
+                        borderRadius: '10px',
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Мягкая тень
+                        backgroundColor: 'white',
+                    }
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }} // Ориентируем на кнопку
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }} // Привязываем к кнопке
             >
                 {notifications.slice(0, 5).map((notification) => (
                     <MenuItem
                         key={notification.id}
-                        className={notification.read ? 'read-notification' : 'unread-notification'}
+                        className={`notification-menu-item ${notification.read ? 'read-notification' : 'unread-notification'}`}
                         onClick={() => {
                             handleRedirect(notification);
-                            if (!notification.read) {
-                                handleMarkAsRead(notification.id);
-                            }
                         }}
                         style={{ cursor: 'pointer' }}
                     >
@@ -105,7 +102,11 @@ const NotificationButton = () => {
                     </MenuItem>
                 ))}
                 <MenuItem>
-                    <Button fullWidth onClick={() => navigate('/notifications')}>
+                    <Button fullWidth onClick={() => {
+                        navigate('/notifications');
+                        handleClose();
+                    }}
+                    >
                         Show all notifications
                     </Button>
                 </MenuItem>

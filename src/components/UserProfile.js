@@ -13,7 +13,7 @@ const UserProfile = () => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:8080/api/employee/profile', {
+                const response = await axios.get('http://localhost:8080/api/user/profile', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -26,7 +26,9 @@ const UserProfile = () => {
             }
         };
 
-        fetchProfile();
+        fetchProfile().then(() => {
+            console.log("Данные загружены");
+        });
     }, []);
 
     if (loading) return <p>Loading...</p>;

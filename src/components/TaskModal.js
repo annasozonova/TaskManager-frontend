@@ -29,7 +29,9 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
             setAssignedTo(task.assignedTo || null);
             setComments('');
 
-            fetchComments(task.id);
+            fetchComments(task.id).then(() => {
+                console.log("Данные загружены");
+            });
         } else {
             resetForm();
         }

@@ -1,24 +1,54 @@
-.dashboard {
+/* Общие стили для контейнера */
+.dashboard-container {
     padding: 20px;
+    background-color: #f4f4f4;  /* светлый фон */
 }
 
-.dashboard h2 {
-    margin-bottom: 20px;
+/* Настройка карточек */
+.card-custom {
+    background-color: #ffffff;  /* Белый фон */
+    border-radius: 8px;  /* Скругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Легкая тень */
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.3s ease;  /* Плавное изменение тени */
 }
 
-.tasks-overview {
-    margin-top: 20px;
+/* Заголовки секций */
+.section-header {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #333333;  /* Тёмно-серый цвет для заголовков */
+    margin-bottom: 12px;
 }
 
-.tasks-overview h3 {
-    margin-bottom: 10px;
+/* Текст с уменьшенной яркостью */
+.text-muted {
+    color: #575757;  /* Сероватый цвет для приглушенного текста */
 }
 
-.tasks-overview ul {
-    list-style-type: none;
+/* Стили для иконок */
+.icon-muted {
+    font-size: 32px;
+    min-width: 40px;
+}
+
+/* Стили для списков */
+.MuiList-root {
     padding: 0;
+    margin: 0;
 }
 
-.tasks-overview li {
-    margin-bottom: 10px;
+.MuiListItem-root {
+    padding: 8px 0;
+}
+
+/* Стили для карточек с диаграммой */
+.MuiCardContent-root {
+    padding: 16px;
+}
+
+/* Базовые стили для графиков */
+.MuiTypography-root {
+    font-family: 'Roboto', sans-serif;
 }

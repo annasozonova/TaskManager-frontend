@@ -165,3 +165,17 @@ export const markNotificationAsRead = async (id, token) => {
         throw error;
     }
 };
+
+export const getDashboard = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/user/dashboard`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error getting dashboard:', error);
+        throw error;
+    }
+};

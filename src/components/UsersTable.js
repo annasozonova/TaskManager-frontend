@@ -29,7 +29,7 @@ const UsersTable = ({
     useEffect(() => {
         // Устанавливаем пользователей в sortedUsers сразу при загрузке
         setSortedUsers(users);
-    }, [users.length]);
+    }, [users, users.length]);
 
     useEffect(() => {
         setLocalHighlightedUserId(highlightedUserId);

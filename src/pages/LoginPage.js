@@ -3,10 +3,9 @@ import '../styles/login.css'
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 
-const LoginPage = () => {
+const LoginPage = ({ onLoginSuccess }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -24,7 +23,7 @@ const LoginPage = () => {
             });
             const token = response.data.token;
             localStorage.setItem('token', token);
-            setMessage('Login successful!');
+            onLoginSuccess();
             navigate('/profile');
         } catch (err) {
             setError('Invalid username or password');
@@ -60,7 +59,6 @@ const LoginPage = () => {
                 {error && <p className="error">{error}</p>}
                 <button className="button-login" type="submit">Login</button>
             </form>
-            {message && <div className="message">{message}</div>}
         </div>
     );
 };
