@@ -3,9 +3,10 @@ import axios from 'axios';
 import UsersTable from '../components/UsersTable';
 import UserModal from '../components/UserModal';
 import { getUsers, createUser, updateUser, deleteUser } from '../services/apiService';
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const UsersPage = () => {
+    // State hooks to manage users, qualifications, loading state, error, departments, modal state, editing user, and current user
     const [users, setUsers] = useState([]);
     const [qualifications, setQualifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ const UsersPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // Fetch data for users, departments, qualifications, and current user in parallel
                 const token = localStorage.getItem('token');
                 const [usersData, departmentsData, qualificationsData, currentUserData] = await Promise.all([
                     getUsers(token),
@@ -79,6 +81,7 @@ const UsersPage = () => {
     const handleSaveUser = async (user) => {
         try {
             const token = localStorage.getItem('token');
+            // Update existing user or create a new one based on whether editingUser has an id
             if (editingUser && editingUser.id) {
                 const updatedUser = await updateUser(editingUser.id, user, token);
                 setUsers((prevUsers) =>
@@ -98,14 +101,15 @@ const UsersPage = () => {
         try {
             const token = localStorage.getItem('token');
             await deleteUser(id, token);
+            // Remove deleted user from the users state
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
         } catch (err) {
             setError('Error deleting user: ' + err.message);
         }
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) return <p>Loading...</p>; // Show loading message
+    if (error) return <p>{error}</p>; // Show error message
 
     return (
         <div>

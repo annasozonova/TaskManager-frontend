@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../styles/accountSettingsStyles.css';
 
 const AccountSettings = () => {
+    // Initialize state hooks
     const [profile, setProfile] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -11,6 +12,7 @@ const AccountSettings = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
+                // Get token from local storage and fetch profile data
                 const token = localStorage.getItem('token');
                 const response = await axios.get('http://localhost:8080/api/employee/profile', {
                     headers: {
@@ -25,12 +27,14 @@ const AccountSettings = () => {
             }
         };
 
+        // Fetch user profile data when component mounts
         fetchProfile();
     }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === "technologies") {
+            // Update nested "technologies" field
             setProfile(prevProfile => ({
                 ...prevProfile,
                 qualification: {
@@ -51,6 +55,7 @@ const AccountSettings = () => {
     const handleSaveProfile = async () => {
         try {
             const token = localStorage.getItem('token');
+            // Save updated profile data
             const response = await axios.put('http://localhost:8080/api/user/profile', {
                 email: profile.email,
                 qualification: {
@@ -77,6 +82,7 @@ const AccountSettings = () => {
 
         try {
             const token = localStorage.getItem('token');
+            // Change password via API
             await axios.put('http://localhost:8080/api/users/change-password', {
                 currentPassword: passwords.currentPassword,
                 newPassword: passwords.newPassword

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import '../styles/login.css'
+import '../styles/login.css';
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ onLoginSuccess }) => {
+    // State hooks to manage form fields and error message
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,6 +13,7 @@ const LoginPage = ({ onLoginSuccess }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            // Send login request to API
             const response = await axios.post('http://localhost:8080/api/login', {
                 username,
                 password
@@ -21,11 +23,13 @@ const LoginPage = ({ onLoginSuccess }) => {
                     'Content-Type': 'application/json'
                 }
             });
+            // Store the received token in local storage
             const token = response.data.token;
             localStorage.setItem('token', token);
-            onLoginSuccess();
-            navigate('/profile');
+            onLoginSuccess(); // Notify parent component about successful login
+            navigate('/profile'); // Navigate to profile page
         } catch (err) {
+            // Set error message if login fails
             setError('Invalid username or password');
         }
     };
@@ -56,7 +60,7 @@ const LoginPage = ({ onLoginSuccess }) => {
                         required
                     />
                 </div>
-                {error && <p className="error">{error}</p>}
+                {error && <p className="error">{error}</p>} {/* Display error message */}
                 <button className="button-login" type="submit">Login</button>
             </form>
         </div>

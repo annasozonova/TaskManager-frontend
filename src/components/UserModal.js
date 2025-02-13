@@ -5,6 +5,7 @@ import "../styles/modalStyles.css";
 Modal.setAppElement("#root");
 
 const UserModal = ({ currentUser, isOpen, onClose, userToEdit, onSave, departments }) => {
+    // State hooks to manage form fields and error state
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,6 +21,7 @@ const UserModal = ({ currentUser, isOpen, onClose, userToEdit, onSave, departmen
 
     useEffect(() => {
         if (userToEdit) {
+            // Load user data into form fields if editing
             setUsername(userToEdit.username || "");
             setEmail(userToEdit.email || "");
             setPassword(userToEdit.password || "");
@@ -31,7 +33,7 @@ const UserModal = ({ currentUser, isOpen, onClose, userToEdit, onSave, departmen
             setExperienceYears(userToEdit.qualification?.experienceYears || "");
             setTechnologies(userToEdit.qualification?.technologies || "");
         } else {
-            resetForm();
+            resetForm(); // Reset form if no user to edit
         }
     }, [userToEdit]);
 
@@ -51,6 +53,7 @@ const UserModal = ({ currentUser, isOpen, onClose, userToEdit, onSave, departmen
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Validate required fields
         if (!username || !email || !password || !role || (!department && !isDepartmentHead) || !qualificationLevel) {
             setError("Please fill all required fields.");
             return;
@@ -71,8 +74,8 @@ const UserModal = ({ currentUser, isOpen, onClose, userToEdit, onSave, departmen
             }
         };
 
-        onSave(userData);
-        onClose();
+        onSave(userData); // Call onSave callback with user data
+        onClose(); // Close modal
     };
 
     return (

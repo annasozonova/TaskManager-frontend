@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import '../styles/modalStyles.css';
 import axios from "axios";
 
 Modal.setAppElement('#root');
 
-const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, task}) => {
+const TaskModal = ({ currentUser, isOpen, onClose, onTaskCreated, departments, task }) => {
+    // State hooks to manage form fields and existing comments
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('LOW');
@@ -19,6 +20,7 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
 
     useEffect(() => {
         if (task) {
+            // Load task data into form fields
             setTitle(task.title || '');
             setDescription(task.description || '');
             setPriority(task.priority || 'LOW');
@@ -30,10 +32,10 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
             setComments('');
 
             fetchComments(task.id).then(() => {
-                console.log("Данные загружены");
+                console.log("Data loaded");
             });
         } else {
-            resetForm();
+            resetForm(); // Reset form if no task is provided
         }
     }, [task]);
 
@@ -85,7 +87,7 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                 id: currentUser.role === 'ADMIN' ? selectedDepartment :
                     (currentUser.role === 'DEPARTMENT_HEAD' || currentUser.role === 'EMPLOYEE') ? currentUser.department.id : undefined
             },
-            comments: comments.trim() ? comments : null // Отправляем только если комментарий не пустой
+            comments: comments.trim() ? comments : null // Include comments only if not empty
         };
 
         onTaskCreated(taskData);
@@ -107,7 +109,7 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
-                        readOnly={task && currentUser.role === 'EMPLOYEE'}
+                        readOnly={task && currentUser.role === 'EMPLOYEE'} // Readonly for employees when editing
                     />
                 </div>
                 <div className="form-group">
@@ -115,9 +117,9 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        rows={description ? description.split('\n').length : 1} // Устанавливаем высоту поля в зависимости от наличия текста
-                        style={{minHeight: '20px'}} // Минимальная высота поля
-                        readOnly={task && currentUser.role === 'EMPLOYEE'}
+                        rows={description ? description.split('\n').length : 1} // Set height based on text
+                        style={{ minHeight: '20px' }} // Minimum height
+                        readOnly={task && currentUser.role === 'EMPLOYEE'} // Readonly for employees when editing
                     />
                 </div>
                 <div className="form-group">
@@ -154,7 +156,7 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                         type="date"
                         value={dueDate}
                         onChange={(e) => setDueDate(e.target.value)}
-                        readOnly={task && currentUser.role === 'EMPLOYEE'}
+                        readOnly={task && currentUser.role === 'EMPLOYEE'} // Readonly for employees when editing
                     />
                 </div>
                 {currentUser.role !== 'EMPLOYEE' && (
@@ -197,7 +199,7 @@ const TaskModal = ({currentUser, isOpen, onClose, onTaskCreated, departments, ta
                     </div>
                 )}
                 {currentUser.role !== 'ADMIN' && (
-                    <input type="hidden" value={currentUser.department.id}/>
+                    <input type="hidden" value={currentUser.department.id} />
                 )}
                 <div className="form-actions">
                     <button type="submit" className="submit-btn">{task ? 'Save Changes' : 'Create Task'}</button>

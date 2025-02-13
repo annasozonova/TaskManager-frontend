@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
-import {IconButton, ListItemIcon, Menu, MenuItem} from '@mui/material';
-import {Link, useNavigate} from 'react-router-dom';
+import { IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/userProfileButtonStyles.css';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const UserProfileButton = ({ onLogout }) => {
+    // State hook to manage the anchor element for the menu
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
 
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget); // Open menu
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setAnchorEl(null); // Close menu
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('token'); // Remove token from local storage
         onLogout();
-        navigate('/login');
+        navigate('/login'); // Navigate to login page
     };
 
     return (
         <div className="user-profile-button">
             <IconButton color="inherit" onClick={handleClick}>
-                <AccountBoxIcon style={{ fontSize: 32 }}/>
+                <AccountBoxIcon style={{ fontSize: 32 }} />
             </IconButton>
             <Menu
                 id="user-menu"

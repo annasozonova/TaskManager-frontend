@@ -1,24 +1,24 @@
 import axios from 'axios';
 
-// Адрес бэкенда
+// Backend URL
 const API_URL = 'http://localhost:8080/api';
 
-// Получение списка пользователей с бэкенда
+// Fetch the list of users from the backend
 export const getUsers = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/users`, {
             headers: {
-            'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
             }
         });
-        return response.data;  // Возвращаем данные из ответа
+        return response.data;
     } catch (error) {
         console.error('Error fetching users:', error);
         throw error;
     }
 };
 
-// Создание пользователя
+// Create a new user
 export const createUser = async (user, token) => {
     try {
         const response = await axios.post(`${API_URL}/users`, user, {
@@ -33,7 +33,7 @@ export const createUser = async (user, token) => {
     }
 };
 
-// Обновление пользователя
+// Update an existing user
 export const updateUser = async (id, updatedUser, token) => {
     try {
         const response = await axios.put(`${API_URL}/users/${id}`, updatedUser, {
@@ -48,7 +48,7 @@ export const updateUser = async (id, updatedUser, token) => {
     }
 };
 
-// Удаление пользователя
+// Delete a user
 export const deleteUser = async (id, token) => {
     try {
         await axios.delete(`${API_URL}/users/${id}`, {
@@ -62,7 +62,7 @@ export const deleteUser = async (id, token) => {
     }
 };
 
-// Получение списка задач с бэкенда
+// Fetch the list of tasks from the backend
 export const getTasks = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/tasks`, {
@@ -77,7 +77,7 @@ export const getTasks = async (token) => {
     }
 };
 
-// Создание задачи
+// Create a new task
 export const createTask = async (task, token) => {
     try {
         const response = await axios.post(`${API_URL}/tasks`, task, {
@@ -92,7 +92,7 @@ export const createTask = async (task, token) => {
     }
 };
 
-// Обновление задачи
+// Update an existing task
 export const updateTask = async (id, updatedTask, token) => {
     try {
         const response = await axios.put(`${API_URL}/tasks/${id}`, updatedTask, {
@@ -107,7 +107,7 @@ export const updateTask = async (id, updatedTask, token) => {
     }
 };
 
-// Удаление задачи
+// Delete a task
 export const deleteTask = async (id, token) => {
     try {
         await axios.delete(`${API_URL}/tasks/${id}`, {
@@ -121,8 +121,7 @@ export const deleteTask = async (id, token) => {
     }
 };
 
-
-// Получение непрочитанных уведомлений сотрудника
+// Fetch unread notifications for the employee
 export const getUnreadNotifications = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/notifications/unread`, {
@@ -132,12 +131,12 @@ export const getUnreadNotifications = async (token) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching employee unread notifications:', error);
+        console.error('Error fetching unread notifications:', error);
         throw error;
     }
 };
 
-// Получение ВСЕХ уведомлений сотрудника
+// Fetch all notifications for the employee
 export const getAllNotifications = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/notifications`, {
@@ -147,12 +146,12 @@ export const getAllNotifications = async (token) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching employee notifications:', error);
+        console.error('Error fetching notifications:', error);
         throw error;
     }
 };
 
-// Пометка уведомлений как прочитанные
+// Mark a notification as read
 export const markNotificationAsRead = async (id, token) => {
     try {
         await axios.put(`${API_URL}/notifications/mark-as-read/${id}`, {}, {
@@ -161,11 +160,12 @@ export const markNotificationAsRead = async (id, token) => {
             }
         });
     } catch (error) {
-        console.error('Error reading notification:', error);
+        console.error('Error marking notification as read:', error);
         throw error;
     }
 };
 
+// Fetch dashboard data
 export const getDashboard = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/user/dashboard`, {

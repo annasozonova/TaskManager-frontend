@@ -3,9 +3,10 @@ import { Badge, Button, IconButton, Menu, MenuItem, Typography } from '@mui/mate
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import '../styles/notificationsStyles.css';
 import { getAllNotifications, getUnreadNotifications } from "../services/apiService";
-import {useLocation, useNavigate} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NotificationButton = () => {
+    // State hooks to manage menu anchor element, notifications, unread notifications, and error state
     const [anchorEl, setAnchorEl] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [unreadNotifications, setUnreadNotifications] = useState([]);
@@ -17,29 +18,32 @@ const NotificationButton = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
+                // Fetch all notifications and unread notifications
                 const token = localStorage.getItem('token');
                 const allNotificationsData = await getAllNotifications(token);
                 const unreadNotificationsData = await getUnreadNotifications(token);
+                // Sort notifications by timestamp
                 setNotifications(allNotificationsData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
                 setUnreadNotifications(unreadNotificationsData);
             } catch (err) {
-                setError('Error fetching notifications: ' + err.message);
+                setError('Error fetching notifications: ' + err.message); // Set error message if fetching fails
             }
         };
 
         fetchNotifications().then(() => {
-            console.log("Данные загружены");
+            console.log("Data loaded");
         });
+        // Refresh notifications every 60 seconds
         const interval = setInterval(fetchNotifications, 60000);
         return () => clearInterval(interval);
     }, [location.pathname]);
 
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget); // Open menu
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setAnchorEl(null); // Close menu
     };
 
     const handleRedirect = (notification) => {
@@ -60,7 +64,7 @@ const NotificationButton = () => {
             console.log("Current location after navigation:", location.pathname);
         }
 
-        handleClose();
+        handleClose(); // Close menu after redirect
     };
 
     return (
@@ -78,14 +82,14 @@ const NotificationButton = () => {
                 PaperProps={{
                     sx: {
                         width: '40%',
-                        maxWidth: '400px', // Ограничим, чтобы не раздувалось на больших экранах
+                        maxWidth: '400px', // Limit max width to prevent overexpansion on large screens
                         borderRadius: '10px',
-                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Мягкая тень
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Soft shadow
                         backgroundColor: 'white',
                     }
                 }}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }} // Ориентируем на кнопку
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }} // Привязываем к кнопке
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }} // Align menu to button
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }} // Align menu to button
             >
                 {notifications.slice(0, 5).map((notification) => (
                     <MenuItem
@@ -104,7 +108,7 @@ const NotificationButton = () => {
                 <MenuItem>
                     <Button fullWidth onClick={() => {
                         navigate('/notifications');
-                        handleClose();
+                        handleClose(); // Close menu after navigating to notifications
                     }}
                     >
                         Show all notifications

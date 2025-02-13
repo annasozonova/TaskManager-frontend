@@ -26,27 +26,28 @@ const UserProfile = () => {
             }
         };
 
+        // Fetch user profile data
         fetchProfile().then(() => {
-            console.log("Данные загружены");
+            console.log("Data loaded");
         });
     }, []);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) return <p>Loading...</p>; // Show loading message
+    if (error) return <p>{error}</p>; // Show error message
 
     return (
         <div className="profile">
             <h2>User Profile</h2>
-                <div>
-                    <p><strong>Username:</strong> {profile.username}</p>
-                    <p><strong>Password:</strong> ••••••••</p>
-                    <p><strong>Email:</strong> {profile.email}</p>
-                    <p><strong>Technologies:</strong> {profile?.qualification.technologies}</p>
-                    <p><strong>Full Name:</strong> {profile.firstName + ' ' + profile.lastName}</p>
-                    <p><strong>Department:</strong> {profile.department?.name}</p>
-                    <p><strong>Role:</strong> {profile.role}</p>
-                    <button className="edit-btn" onClick={() => navigate('/settings')}>Edit</button>
-                </div>
+            <div>
+                <p><strong>Username:</strong> {profile.username}</p>
+                <p><strong>Password:</strong> ••••••••</p>
+                <p><strong>Email:</strong> {profile.email}</p>
+                <p><strong>Technologies:</strong> {profile?.qualification.technologies}</p>
+                <p><strong>Full Name:</strong> {profile.firstName + ' ' + profile.lastName}</p>
+                <p><strong>Department:</strong> {profile.department?.name}</p>
+                <p><strong>Role:</strong> {profile.role}</p>
+                <button className="edit-btn" onClick={() => navigate('/settings')}>Edit</button>
+            </div>
         </div>
     );
 };

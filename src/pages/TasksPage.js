@@ -6,11 +6,12 @@ import TasksTable from '../components/TasksTable';
 import { useLocation } from 'react-router-dom';
 
 const TasksPage = () => {
+    // State hooks to manage tasks, loading, error, departments, modal state, editing task, and current user
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [departments, setDepartments] = useState([]);
-    const [modalOpen, setModalOpen] = useState(false); // For modal window state
+    const [modalOpen, setModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
 
@@ -24,6 +25,7 @@ const TasksPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // Fetch data for tasks, departments, and current user in parallel
                 const token = localStorage.getItem('token');
                 const [tasksData, departmentsData, currentUserData] = await Promise.all([
                     getTasks(token),
@@ -73,6 +75,7 @@ const TasksPage = () => {
     const handleSaveTask = async (task) => {
         try {
             const token = localStorage.getItem('token');
+            // Update existing task or create a new one based on whether editingTask has an id
             if (editingTask && editingTask.id) {
                 const updatedTask = await updateTask(editingTask.id, task, token);
                 setTasks((prevTasks) =>
@@ -93,14 +96,15 @@ const TasksPage = () => {
         try {
             const token = localStorage.getItem('token');
             await deleteTask(id, token);
+            // Remove deleted task from the tasks state
             setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
         } catch (err) {
             setError('Error deleting task: ' + err.message);
         }
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) return <p>Loading...</p>; // Show loading message
+    if (error) return <p>{error}</p>; // Show error message
 
     return (
         <div>

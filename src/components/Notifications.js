@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {getAllNotifications, markNotificationAsRead} from '../services/apiService';
+import React, { useEffect, useState } from 'react';
+import { getAllNotifications, markNotificationAsRead } from '../services/apiService';
 import '../styles/notificationsStyles.css';
-import {useNavigate, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import moment from 'moment';
 
 const Notifications = () => {
@@ -16,6 +16,7 @@ const Notifications = () => {
         const fetchNotifications = async () => {
             try {
                 const token = localStorage.getItem('token');
+                // Fetch notifications data
                 const notificationsData = await getAllNotifications(token);
 
                 console.log("Fetched notifications:", notificationsData);
@@ -26,6 +27,7 @@ const Notifications = () => {
                     }
                 });
 
+                // Sort notifications by timestamp
                 setNotifications(notificationsData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
             } catch (err) {
                 setError('Error fetching notifications: ' + err.message);
@@ -34,10 +36,11 @@ const Notifications = () => {
             }
         };
 
-
         fetchNotifications().then(() => {
-            console.log("Данные загружены");
+            console.log("Data loaded");
         });
+
+        // Refresh notifications every 60 seconds
         const interval = setInterval(fetchNotifications, 60000);
         return () => clearInterval(interval);
     }, []);
@@ -46,9 +49,10 @@ const Notifications = () => {
         try {
             const token = localStorage.getItem('token');
             await markNotificationAsRead(id, token);
+            // Update notification as read
             setNotifications(prevNotifications =>
                 prevNotifications.map(n =>
-                    n.id === id ? {...n, read: true} : n
+                    n.id === id ? { ...n, read: true } : n
                 )
             );
         } catch (error) {
@@ -66,6 +70,7 @@ const Notifications = () => {
 
         console.log(`Navigating to: /tasks?highlightedTaskId=${notification.referenceId}`);
 
+        // Redirect based on notification type
         if (notification.type === 'TASK') {
             navigate(`/tasks?highlightedTaskId=${notification.referenceId}`);
             console.log("Current location after navigation:", location.pathname);
@@ -93,14 +98,14 @@ const Notifications = () => {
                                     handleMarkAsRead(notification.id);
                                 }
                             }}
-                            style={{cursor: 'pointer'}}
+                            style={{ cursor: 'pointer' }}
                         >
                         <span className="notification-text">
                             {notification.message}
                         </span>
                             <span className="notification-timestamp">
-                                {moment(notification.timestamp).format('LLL')}
-                            </span>
+                            {moment(notification.timestamp).format('LLL')}
+                        </span>
                             {!notification.read && (
                                 <button className="mark-as-read-btn"
                                         onClick={(e) => {

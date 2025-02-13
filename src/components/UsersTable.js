@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Table,
     TableBody,
@@ -10,9 +10,9 @@ import {
     Typography,
     Button
 } from "@mui/material";
-import "../styles/tasksTableStyles.css";
-import EditIcon from "../assets/edit-button-2.png";
-import DeleteIcon from "../assets/delete-button-3.png"; // Импорт стилей
+import "../styles/tasksAndUsersTableStyles.css";
+import EditIcon from '../assets/edit_icon.png';
+import DeleteIcon from '../assets/delete_icon.png';
 
 const UsersTable = ({
                         users,
@@ -20,14 +20,15 @@ const UsersTable = ({
                         onDelete,
                         onOpenModal,
                         highlightedUserId }) => {
-    const [sortedUsers, setSortedUsers] = useState(users); // Локальное состояние для сортированных пользователей
+    // Local state for sorted users
+    const [sortedUsers, setSortedUsers] = useState(users);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
     const [localHighlightedUserId, setLocalHighlightedUserId] = useState(null);
 
     const highlightTimeoutRef = useRef(null);
 
     useEffect(() => {
-        // Устанавливаем пользователей в sortedUsers сразу при загрузке
+        // Set users in sortedUsers on load
         setSortedUsers(users);
     }, [users, users.length]);
 
@@ -36,22 +37,19 @@ const UsersTable = ({
 
         if (highlightTimeoutRef.current) clearTimeout(highlightTimeoutRef.current);
 
-
         highlightTimeoutRef.current = setTimeout(() => {
             setLocalHighlightedUserId(null);
-        }, 5000)
+        }, 5000);
 
         return () => {
             if (highlightTimeoutRef.current) clearTimeout(highlightTimeoutRef.current);
-        }
+        };
     }, [highlightedUserId]);
 
     const sortUsers = (key) => {
-        const newDirection =
-            sortConfig.key === key && sortConfig.direction === "asc"
-                ? "desc"
-                : "asc";
+        const newDirection = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
 
+        // Sort users by key
         const sorted = [...sortedUsers].sort((a, b) => {
             let aValue = a[key];
             let bValue = b[key];
@@ -179,4 +177,5 @@ const UsersTable = ({
         </div>
     );
 };
+
 export default UsersTable;

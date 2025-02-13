@@ -1,31 +1,16 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Typography,
-    Tooltip,
-    Button
-} from '@mui/material';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { TableContainer, Paper, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Tooltip } from '@mui/material';
+import EditIcon from '../assets/edit_icon.png';
+import DeleteIcon from '../assets/delete_icon.png';
 import '../styles/tasksTableStyles.css';
-import DeleteIcon from '../assets/delete-button-3.png';
-import EditIcon from '../assets/edit-button-2.png';
 
-const TasksTable = ({
-                        tasks,
-                        onOpenModal,
-                        onEdit,
-                        onDelete,
-                        highlightedTaskId }) => {
+const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete, highlightedTaskId }) => {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [localHighlightedTaskId, setLocalHighlightedTaskId] = useState(null);
     const highlightTimeoutRef = useRef(null);
     const rowRefs = useRef({});
 
+    // Create references for task rows
     const getRowRef = (taskId) => {
         if (!rowRefs.current[taskId]) {
             rowRefs.current[taskId] = React.createRef();
@@ -39,7 +24,6 @@ const TasksTable = ({
         return [...tasks].sort((a, b) => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];
-
             if (sortConfig.key === 'department') {
                 aValue = a.department?.name || '';
                 bValue = b.department?.name || '';
@@ -50,7 +34,6 @@ const TasksTable = ({
                 aValue = priorityOrder[a.priority] || Infinity;
                 bValue = priorityOrder[b.priority] || Infinity;
             }
-
             if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
             if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
@@ -59,19 +42,16 @@ const TasksTable = ({
 
     useEffect(() => {
         setLocalHighlightedTaskId(highlightedTaskId);
-
         if (highlightedTaskId) {
             if (highlightTimeoutRef.current) {
                 clearTimeout(highlightTimeoutRef.current);
             }
-
             const scrollToHighlightedTask = () => {
                 requestAnimationFrame(() => {
                     const row = rowRefs.current[highlightedTaskId]?.current;
                     if (row) {
                         row.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     } else {
-                        // Если элемента еще нет, следим за изменениями в таблице
                         const observer = new MutationObserver(() => {
                             const row = rowRefs.current[highlightedTaskId]?.current;
                             if (row) {
@@ -79,24 +59,19 @@ const TasksTable = ({
                                 observer.disconnect();
                             }
                         });
-
                         observer.observe(document.querySelector('.table-container'), {
                             childList: true,
                             subtree: true,
                         });
-
                         setTimeout(() => observer.disconnect(), 2000);
                     }
                 });
             };
-
             setTimeout(scrollToHighlightedTask, 300);
-
             highlightTimeoutRef.current = setTimeout(() => {
                 setLocalHighlightedTaskId(null);
             }, 5000);
         }
-
         return () => {
             if (highlightTimeoutRef.current) clearTimeout(highlightTimeoutRef.current);
         };
@@ -166,28 +141,22 @@ const TasksTable = ({
                 <Table className="styled-table">
                     <TableHead className="sticky-table-head">
                         <TableRow>
-                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('title')}
-                                       aria-label="Sort by title">
+                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('title')} aria-label="Sort by title">
                                 Title {getSortIndicator('title')}
                             </TableCell>
-                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('status')}
-                                       aria-label="Sort by status">
+                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('status')} aria-label="Sort by status">
                                 Status {getSortIndicator('status')}
                             </TableCell>
-                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('priority')}
-                                       aria-label="Sort by priority">
+                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('priority')} aria-label="Sort by priority">
                                 Priority {getSortIndicator('priority')}
                             </TableCell>
-                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('dueDate')}
-                                       aria-label="Sort by due date">
+                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('dueDate')} aria-label="Sort by due date">
                                 Due Date {getSortIndicator('dueDate')}
                             </TableCell>
-                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('assignedTo')}
-                                       aria-label="Sort by assigned to">
+                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('assignedTo')} aria-label="Sort by assigned to">
                                 Assigned To {getSortIndicator('assignedTo')}
                             </TableCell>
-                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('department')}
-                                       aria-label="Sort by department">
+                            <TableCell className="styled-table-head-cell" onClick={() => sortTasks('department')} aria-label="Sort by department">
                                 Department {getSortIndicator('department')}
                             </TableCell>
                             <TableCell className="styled-table-head-cell description">Description</TableCell>
@@ -205,9 +174,7 @@ const TasksTable = ({
                                         setLocalHighlightedTaskId(null);
                                         if (highlightTimeoutRef.current) {
                                             clearTimeout(highlightTimeoutRef.current);
-                                        }
-                                    }
-                                }}
+                                        }}}}
                             >
                                 <TableCell>{task.title}</TableCell>
                                 <TableCell>{getStatusCircleWithText(task.status)}</TableCell>
@@ -222,11 +189,10 @@ const TasksTable = ({
                                 </TableCell>
                                 <TableCell className="action-column">
                                     <Button onClick={() => onEdit(task)} className="icon-button" aria-label="Edit task">
-                                        <img src={EditIcon} alt="Edit" className="icon"/>
+                                        <img src={EditIcon} alt="Edit" className="icon" />
                                     </Button>
-                                    <Button onClick={() => onDelete(task.id)} className="icon-button"
-                                            aria-label="Delete task">
-                                        <img src={DeleteIcon} alt="Delete" className="icon"/>
+                                    <Button onClick={() => onDelete(task.id)} className="icon-button" aria-label="Delete task">
+                                        <img src={DeleteIcon} alt="Delete" className="icon" />
                                     </Button>
                                 </TableCell>
                             </TableRow>
