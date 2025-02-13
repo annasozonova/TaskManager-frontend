@@ -13,7 +13,7 @@ const NavigationButton = () => {
     return (
         <div className="navigation-button">
             <IconButton color="inherit" onClick={handleOpen}>
-                <MenuIcon style={{ fontSize: 32 }} /> {/* Увеличиваем размер иконки */}
+                <MenuIcon style={{ fontSize: 32 }} />
             </IconButton>
             <NavigationModal open={open} onClose={handleClose} />
         </div>

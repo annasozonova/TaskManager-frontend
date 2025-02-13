@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { getAllNotifications, markNotificationAsRead } from '../services/apiService';
+import React, {useEffect, useState} from 'react';
+import {getAllNotifications, markNotificationAsRead} from '../services/apiService';
 import '../styles/notificationsStyles.css';
-import { useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import moment from 'moment';
 
 const Notifications = () => {
@@ -52,7 +52,7 @@ const Notifications = () => {
             // Update notification as read
             setNotifications(prevNotifications =>
                 prevNotifications.map(n =>
-                    n.id === id ? { ...n, read: true } : n
+                    n.id === id ? {...n, read: true} : n
                 )
             );
         } catch (error) {
@@ -88,35 +88,38 @@ const Notifications = () => {
             <h2>Notifications</h2>
             <ul>
                 {notifications.map((notification) => (
-                    console.log("Rendering notification:", notification),
-                        <li
-                            key={notification.id}
-                            className={notification.read ? 'read-notification' : 'unread-notification'}
-                            onClick={() => {
-                                handleRedirect(notification);
-                                if (!notification.read) {
-                                    handleMarkAsRead(notification.id);
-                                }
-                            }}
-                            style={{ cursor: 'pointer' }}
-                        >
+                        console.log("Rendering notification:", notification),
+                            <li
+                                key={notification.id}
+                                className={notification.read ? 'read-notification' : 'unread-notification'}
+                                onClick={() => {
+                                    handleRedirect(notification);
+                                    if (!notification.read) {
+                                        handleMarkAsRead(notification.id);
+                                    }
+                                }}
+                                style={{cursor: 'pointer'}}
+                            >
                         <span className="notification-text">
                             {notification.message}
                         </span>
-                            <span className="notification-timestamp">
+                                <span className="notification-timestamp">
                             {moment(notification.timestamp).format('LLL')}
                         </span>
-                            {!notification.read && (
-                                <button className="mark-as-read-btn"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleMarkAsRead(notification.id)
-                                        }}>
-                                    Mark as read
-                                </button>
-                            )}
-                        </li>
-                ))}
+                                {!notification.read && (
+                                    <button className="mark-as-read-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleMarkAsRead(notification.id)
+                                            }}
+                                    >
+                                        Mark as read
+                                    </button>
+                                )}
+                            </li>
+                    )
+                )
+                }
             </ul>
         </div>
     );

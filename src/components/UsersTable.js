@@ -11,8 +11,8 @@ import {
     Button
 } from "@mui/material";
 import "../styles/tasksAndUsersTableStyles.css";
-import EditIcon from '../assets/edit_icon.png';
-import DeleteIcon from '../assets/delete_icon.png';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const UsersTable = ({
                         users,
@@ -162,11 +162,11 @@ const UsersTable = ({
                                 </TableCell>
                                 <TableCell className="action-column">
                                     <Button onClick={() => onEdit(user)} className="icon-button" aria-label="Edit user">
-                                        <img src={EditIcon} alt="Edit" className="icon"/>
+                                        <EditIcon alt="Edit" className="icon"/>
                                     </Button>
                                     <Button onClick={() => onDelete(user.id)} className="icon-button"
                                             aria-label="Delete user">
-                                        <img src={DeleteIcon} alt="Delete" className="icon"/>
+                                        <DeleteIcon alt="Delete" className="icon"/>
                                     </Button>
                                 </TableCell>
                             </TableRow>

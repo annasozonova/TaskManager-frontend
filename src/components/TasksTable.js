@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { TableContainer, Paper, Typography, Button, Table, TableHead, TableRow, TableCell, TableBody, Tooltip } from '@mui/material';
-import EditIcon from '../assets/edit_icon.png';
-import DeleteIcon from '../assets/delete_icon.png';
-import '../styles/tasksTableStyles.css';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import '../styles/tasksAndUsersTableStyles.css';
 
 const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete, highlightedTaskId }) => {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
@@ -189,10 +189,10 @@ const TasksTable = ({ tasks, onOpenModal, onEdit, onDelete, highlightedTaskId })
                                 </TableCell>
                                 <TableCell className="action-column">
                                     <Button onClick={() => onEdit(task)} className="icon-button" aria-label="Edit task">
-                                        <img src={EditIcon} alt="Edit" className="icon" />
+                                        <EditIcon alt="Edit" className="icon" />
                                     </Button>
                                     <Button onClick={() => onDelete(task.id)} className="icon-button" aria-label="Delete task">
-                                        <img src={DeleteIcon} alt="Delete" className="icon" />
+                                        <DeleteIcon alt="Delete" className="icon" />
                                     </Button>
                                 </TableCell>
                             </TableRow>
